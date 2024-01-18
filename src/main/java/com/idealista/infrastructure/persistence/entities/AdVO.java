@@ -1,5 +1,6 @@
-package com.idealista.infrastructure.persistence;
+package com.idealista.infrastructure.persistence.entities;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,12 +11,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class AdVO {
 
+    @Id
     private Integer id;
     private String typology;
     private String description;
-    private List<Integer> pictures;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "ad_id")
+    private List<PictureVO> pictures;
     private Integer houseSize;
     private Integer gardenSize;
     private Integer score;

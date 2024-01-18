@@ -3,6 +3,8 @@ package com.idealista.application;
 import com.idealista.domain.*;
 import com.idealista.infrastructure.api.PublicAd;
 import com.idealista.infrastructure.api.QualityAd;
+import com.idealista.infrastructure.mappers.AdToPublicAdMapper;
+import com.idealista.infrastructure.mappers.AdToQualityAdMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,46 +17,29 @@ public class AdsServiceImpl implements AdsService {
     @Autowired
     private AdRepository adRepository;
 
+    @Autowired
+    private AdToPublicAdMapper adToPublicAdMapper;
+
+    @Autowired
+    private AdToQualityAdMapper adToQualityAdMapper;
+
     @Override
     public List<PublicAd> findPublicAds() {
         List<Ad> ads = adRepository.findRelevantAds();
         ads.sort(Comparator.comparing(Ad::getScore));
 
-        List<PublicAd> result = new ArrayList<>();
-        for (Ad ad: ads) {
-            PublicAd publicAd = new PublicAd();
-            publicAd.setDescription(ad.getDescription());
-            publicAd.setGardenSize(ad.getGardenSize());
-            publicAd.setHouseSize(ad.getHouseSize());
-            publicAd.setId(ad.getId());
-            publicAd.setPictureUrls(ad.getPictures().stream().map(Picture::getUrl).collect(Collectors.toList()));
-            publicAd.setTypology(ad.getTypology().name());
-
-            result.add(publicAd);
-        }
-        return result;
+        return ads.stream()
+                .map(adToPublicAdMapper::adToPublicAd)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<QualityAd> findQualityAds() {
         List<Ad> ads = adRepository.findIrrelevantAds();
 
-        List<QualityAd> result = new ArrayList<>();
-        for (Ad ad: ads) {
-            QualityAd qualityAd = new QualityAd();
-            qualityAd.setDescription(ad.getDescription());
-            qualityAd.setGardenSize(ad.getGardenSize());
-            qualityAd.setHouseSize(ad.getHouseSize());
-            qualityAd.setId(ad.getId());
-            qualityAd.setPictureUrls(ad.getPictures().stream().map(Picture::getUrl).collect(Collectors.toList()));
-            qualityAd.setTypology(ad.getTypology().name());
-            qualityAd.setScore(ad.getScore());
-            qualityAd.setIrrelevantSince(ad.getIrrelevantSince());
-
-            result.add(qualityAd);
-        }
-
-        return result;
+        return ads.stream()
+                .map(adToQualityAdMapper::adToQualityAd)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,8 +56,8 @@ public class AdsServiceImpl implements AdsService {
         if (ad.getPictures().isEmpty()) {
             score -= Constants.TEN; //Si no hay fotos restamos 10 puntos
         } else {
-            for (Picture picture: ad.getPictures()) {
-                if(Quality.HD.equals(picture.getQuality())) {
+            for (Picture picture : ad.getPictures()) {
+                if (Quality.HD.equals(picture.getQuality())) {
                     score += Constants.TWENTY; //Cada foto en alta definición aporta 20 puntos
                 } else {
                     score += Constants.TEN; //Cada foto normal aporta 10 puntos
@@ -93,7 +78,7 @@ public class AdsServiceImpl implements AdsService {
             List<String> wds = Arrays.asList(description.split(" ")); //número de palabras
             if (Typology.FLAT.equals(ad.getTypology())) {
                 if (wds.size() >= Constants.TWENTY && wds.size() <= Constants.FORTY_NINE) {
-                   score += Constants.TEN;
+                    score += Constants.TEN;
                 }
 
                 if (wds.size() >= Constants.FIFTY) {

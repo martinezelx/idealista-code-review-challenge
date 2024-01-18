@@ -35,18 +35,21 @@ Para facilitar las cosas, cuando quieras referirte a alguna línea en concreto d
 
 Debes entregarnos un fichero de texto con todos los comentarios que harías sobre el código del repositorio.
 
+> [!TIP]
+> Se utiliza el README.md a modo de documentación para los cambios realizados.
+
 > [!NOTE]
-> Se utiliza el README.md para documentar todos los cambios realizados.
+> Se ha eliminado la clase InMemoryPersistence y se ha implementado una base de datos local H2 con un carga inicial para que el entorno del proyecto funcione correctamente.
 
 # Solución
 * Aqui se explican los cambios realizados en el código para resolver los problemas planteados en el reto.
 
 ## Actualización del proyecto a Java 17
 ### Problema
-El proyecto estaba utilizando una versión anterior de Java y necesitábamos actualizarlo a Java 17 para aprovechar las nuevas características y mejoras de rendimiento y seguridad de esta versión.
+El proyecto estaba utilizando una versión anterior de Java (1.8) y necesitaba actualizarlo a Java 17 para aprovechar las nuevas características, mejoras de rendimiento y seguridad de esta versión.
 
 ### Solución
-Para resolver este problema, realizamos los siguientes cambios en el archivo `pom.xml`:
+Para resolver este problema, he realizado los siguientes cambios en el archivo `pom.xml`:
 1. Cambiamos la versión de Java en la sección de propiedades a 17.
 2. Actualizamos la versión de Spring Boot a una que sea compatible con Java 17. En este caso, utilizamos la versión 3.2.1.
 
@@ -55,13 +58,32 @@ Para resolver este problema, realizamos los siguientes cambios en el archivo `po
 El proyecto no estaba utilizando Lombok, por lo que el código contenía mucho boilerplate que dificultaba la lectura y mantenimiento del mismo.
 
 ### Solución
-Para resolver este problema, realizamos los siguientes cambios en el archivo `pom.xml`:
-1. Agregamos la dependencia de Lombok compatible con Java 17 y Spring Boot 3.2.1.
-2. Modificamos todas las clases del proyecto para utilizar las anotaciones de Lombok y eliminar el boilerplate.
+Para resolver este problema, he agregado la dependencia de Lombok compatible y las anotaciones necesarias para su implementación.
 
 ## Fichero .gitignore
 ### Problema
 El proyecto contenía un fichero `.gitignore` casi vacío, por lo que se podrían subir al repositorio archivos innecesarios.
 
 ### Solución
-Para resolver este problema, agregamos un fichero `.gitignore` con reglas default para proyectos Java.
+Para resolver este problema, he agregado un fichero `.gitignore` con reglas default para proyectos Java.
+
+## MapStruct
+### Problema
+El proyecto no estaba utilizando ningun Mapper, por lo que el código contenía muchos mapeos que generabam boilerplate, dificultando la lectura y mantenimiento del mismo.
+
+### Solución
+Para resolver este problema, he agregado la dependencia de MapStruct compatible con Java 17/Lombok y creado los mappers necesarios.
+
+## OpenAPI
+### Problema
+El proyecto no estaba utilizando OpenAPI, por lo que no se podía generar la documentación de la API.
+
+### Solución
+Para resolver este problema, he agregado la dependencia de OpenAPI compatible con Spring Boot 3.2.1 y creado varias anotaciones para documentar la API y su visualización en Swagger.
+
+## Spring Actuator
+### Problema
+El proyecto no estaba utilizando Spring Actuator, por lo que no se podía obtener información sobre el estado de la aplicación.
+
+### Solución
+Para resolver este problema, he agregado la dependencia de Spring Actuator compatible, aparte de los endpoints por defecto tambien he agregado un @Timed para medir el tiempo de ejecución de los endpoints.
