@@ -31,21 +31,27 @@ class AdsServiceImplTest {
     }
 
     private Ad relevantAd() {
-        return new Ad(1,
-                Typology.FLAT,
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum felis elit, vitae cursus erat blandit vitae. Maecenas eget efficitur massa. Maecenas ut dolor eget enim consequat iaculis vitae nec elit. Maecenas eu urna nec massa feugiat pharetra. Sed eu quam imperdiet orci lobortis fermentum. Sed odio justo, congue eget iaculis.",
-                Arrays.asList(new Picture(1, "http://urldeprueba.com/1", Quality.HD), new Picture(2, "http://urldeprueba.com/2", Quality.HD)),
-                50,
-                null);
+        return Ad.builder()
+                .id(1)
+                .typology(Typology.FLAT)
+                .description("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum felis elit, vitae cursus erat blandit vitae. Maecenas eget efficitur massa. Maecenas ut dolor eget enim consequat iaculis vitae nec elit. Maecenas eu urna nec massa feugiat pharetra. Sed eu quam imperdiet orci lobortis fermentum. Sed odio justo, congue eget iaculis.")
+                .pictures(Arrays.asList(
+                        Picture.builder().id(1).url("http://urldeprueba.com/1").quality(Quality.HD).build(),
+                        Picture.builder().id(2).url("http://urldeprueba.com/2").quality(Quality.HD).build()))
+                .houseSize(50)
+                .gardenSize(null)
+                .build();
     }
 
     private Ad irrelevantAd() {
-        return new Ad(1,
-                Typology.FLAT,
-                "",
-                Collections.emptyList(),
-                100,
-                null);
+        return Ad.builder()
+                .id(1)
+                .typology(Typology.FLAT)
+                .description("")
+                .pictures(Collections.emptyList())
+                .houseSize(100)
+                .gardenSize(null)
+                .build();
     }
 
 }

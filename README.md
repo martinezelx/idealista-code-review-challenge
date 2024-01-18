@@ -34,3 +34,34 @@ Para facilitar las cosas, cuando quieras referirte a alguna línea en concreto d
 ## Criterios de aceptación
 
 Debes entregarnos un fichero de texto con todos los comentarios que harías sobre el código del repositorio.
+
+> [!NOTE]
+> Se utiliza el README.md para documentar todos los cambios realizados.
+
+# Solución
+* Aqui se explican los cambios realizados en el código para resolver los problemas planteados en el reto.
+
+## Actualización del proyecto a Java 17
+### Problema
+El proyecto estaba utilizando una versión anterior de Java y necesitábamos actualizarlo a Java 17 para aprovechar las nuevas características y mejoras de rendimiento y seguridad de esta versión.
+
+### Solución
+Para resolver este problema, realizamos los siguientes cambios en el archivo `pom.xml`:
+1. Cambiamos la versión de Java en la sección de propiedades a 17.
+2. Actualizamos la versión de Spring Boot a una que sea compatible con Java 17. En este caso, utilizamos la versión 3.2.1.
+
+## Lombok
+### Problema
+El proyecto no estaba utilizando Lombok, por lo que el código contenía mucho boilerplate que dificultaba la lectura y mantenimiento del mismo.
+
+### Solución
+Para resolver este problema, realizamos los siguientes cambios en el archivo `pom.xml`:
+1. Agregamos la dependencia de Lombok compatible con Java 17 y Spring Boot 3.2.1.
+2. Modificamos todas las clases del proyecto para utilizar las anotaciones de Lombok y eliminar el boilerplate.
+
+## Fichero .gitignore
+### Problema
+El proyecto contenía un fichero `.gitignore` casi vacío, por lo que se podrían subir al repositorio archivos innecesarios.
+
+### Solución
+Para resolver este problema, agregamos un fichero `.gitignore` con reglas default para proyectos Java.
