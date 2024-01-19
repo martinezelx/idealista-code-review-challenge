@@ -18,7 +18,7 @@ public class AdsController {
     private AdsService adsService;
 
     @GetMapping("/ads/quality")
-    @Operation(summary = "Get quality ads list", description = "Retrieves a list of ads based on quality criteria")
+    @Operation(summary = "Get irrelevant ads list", description = "Retrieves a list of irrelevant ads that has < 40 score")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of ads")
     @Timed(value = "ads.quality", description = "Time taken to retrieve the list of quality ads")
     public ResponseEntity<List<QualityAd>> qualityListing() {
@@ -26,7 +26,7 @@ public class AdsController {
     }
 
     @GetMapping("/ads/public")
-    @Operation(summary = "Get public ads list", description = "Retrieves a list of ads based on public criteria")
+    @Operation(summary = "Get relevant ads list", description = "Retrieves a list of relevant ads that has >= 40 score ordered by score descending")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of ads")
     @Timed(value = "ads.public", description = "Time taken to retrieve the list of public ads")
     public ResponseEntity<List<PublicAd>> publicListing() {

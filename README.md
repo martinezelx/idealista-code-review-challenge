@@ -35,6 +35,8 @@ Para facilitar las cosas, cuando quieras referirte a alguna línea en concreto d
 
 Debes entregarnos un fichero de texto con todos los comentarios que harías sobre el código del repositorio.
 
+---
+
 > [!TIP]
 > Se utiliza el README.md a modo de documentación para los cambios realizados.
 
@@ -87,3 +89,8 @@ El proyecto no estaba utilizando Spring Actuator, por lo que no se podía obtene
 
 ### Solución
 Para resolver este problema, he agregado la dependencia de Spring Actuator compatible, aparte de los endpoints por defecto tambien he agregado un @Timed para medir el tiempo de ejecución de los endpoints.
+> [!TIP]
+> Se puede revisar el tiempo de ejecución en los siguientes endpoints: 
+> http://localhost:8080/actuator/metrics/ads.quality
+> http://localhost:8080/actuator/metrics/ads.public
+> http://localhost:8080/actuator/metrics/ads.score

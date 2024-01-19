@@ -8,7 +8,10 @@ import com.idealista.infrastructure.mappers.AdToQualityAdMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,19 +28,14 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public List<PublicAd> findPublicAds() {
-        List<Ad> ads = adRepository.findRelevantAds();
-        ads.sort(Comparator.comparing(Ad::getScore));
-
-        return ads.stream()
+        return adRepository.findRelevantAds().stream()
                 .map(adToPublicAdMapper::adToPublicAd)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<QualityAd> findQualityAds() {
-        List<Ad> ads = adRepository.findIrrelevantAds();
-
-        return ads.stream()
+        return adRepository.findIrrelevantAds().stream()
                 .map(adToQualityAdMapper::adToQualityAd)
                 .collect(Collectors.toList());
     }
