@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QualityAd {
-
     private Integer id;
     private String typology;
     private String description;

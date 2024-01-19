@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class AdVO {
-
     @Id
     private Integer id;
     private String typology;

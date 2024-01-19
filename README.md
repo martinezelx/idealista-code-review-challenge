@@ -208,3 +208,55 @@ Esta excepción se lanza cuando ocurre un error durante el cálculo de la puntua
 #### AdRepositoryAccessException
 Esta excepción se lanza cuando ocurre un error al acceder al repositorio de anuncios. Esto puede suceder, por ejemplo, si la base de datos está inaccesible o si ocurre un error durante la consulta.
 
+## Incorporación de Logs con Lombok @Slf4j
+
+### Descripción:
+Se ha integrado la anotación `@Slf4j` de Lombok en las clases de servicio y repositorio para facilitar la generación de logs. Esta anotación de Lombok genera automáticamente un objeto `log` de tipo `org.slf4j.Logger` en la clase anotada, permitiendo registrar mensajes de log de manera sencilla y eficiente.
+
+### Ventajas:
+- Simplificación del código de registro de logs.
+- Mejora en la legibilidad y mantenibilidad del código.
+- Facilita el seguimiento y depuración de la aplicación.
+
+### Uso en el Código:
+
+La anotación `@Slf4j` se utiliza en las clases de servicio y repositorio para generar logs. A continuación, se muestra un ejemplo de su uso en la clase `AdServiceImpl`:
+
+```java
+@Slf4j
+@Service
+public class AdServiceImpl implements AdService {
+
+    // ...
+
+    @Override
+    public List<PublicAd> findPublicAds() {
+        log.info("Finding public ads");
+        // ...
+        log.info("Found {} public ads", publicAds.size());
+        return publicAds;
+    }
+
+    // ...
+}
+```
+> [!NOTE]
+> En este código, se utilizan los métodos `log.info` para registrar información sobre la ejecución de los métodos. Los mensajes de registro pueden incluir información adicional, como el número de anuncios encontrados.
+
+## Cambios en el Controller
+
+### Descripción:
+Se han realizado varias mejoras y cambios en la clase `AdController` para mejorar su funcionalidad y adherirse a las mejores prácticas de desarrollo. Los cambios incluyen la adición de anotaciones para la documentación de la API, la incorporación de métricas de tiempo de ejecución y la modificación de los endpoints.
+
+### Cambios Detallados:
+
+1. **Cambio de Nombre de Clase y Servicio**: Se ha cambiado el nombre de la clase de `AdsController` a `AdController` y el servicio de `AdsService` a `AdService` para mantener la consistencia en la nomenclatura.
+
+2. **Incorporación de Anotaciones de OpenAPI**: Se han añadido anotaciones de OpenAPI a los métodos del controlador para generar automáticamente la documentación de la API. Estas anotaciones proporcionan detalles sobre la operación de cada endpoint y las posibles respuestas.
+
+3. **Incorporación de Métricas de Tiempo de Ejecución**: Se ha añadido la anotación `@Timed` a los métodos del controlador para medir el tiempo de ejecución de cada endpoint. Esto proporciona información valiosa para el monitoreo y la optimización del rendimiento.
+
+4. **Modificación de Endpoints**: Se ha cambiado el endpoint para calcular la puntuación de los anuncios de un método GET a un método PUT para adherirse a las convenciones REST. Además, se ha cambiado la respuesta de este endpoint a `ResponseEntity.noContent().build()` para indicar que la operación fue exitosa pero no devuelve contenido.
+
+> [!NOTE]
+> Con estos cambios, el controlador ahora proporciona una documentación de API más detallada, permite el seguimiento del tiempo de ejecución de los endpoints y sigue las convenciones REST de manera más precisa.

@@ -3,14 +3,16 @@ package com.idealista.infrastructure.persistence.repositories;
 import com.idealista.application.exceptions.AdRepositoryAccessException;
 import com.idealista.domain.Ad;
 import com.idealista.domain.AdRepository;
-import com.idealista.infrastructure.persistence.jpa.AdVORepository;
 import com.idealista.infrastructure.mappers.AdMapper;
+import com.idealista.infrastructure.persistence.jpa.AdVORepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Repository
 public class AdRepositoryImpl implements AdRepository {
 
@@ -27,6 +29,7 @@ public class AdRepositoryImpl implements AdRepository {
                     .map(adMapper::toDomain)
                     .collect(Collectors.toList());
         } catch (Exception e) {
+            log.error("Error occurred while fetching all ads", e);
             throw new AdRepositoryAccessException("Error occurred while fetching all ads", e);
         }
     }
@@ -36,6 +39,7 @@ public class AdRepositoryImpl implements AdRepository {
         try {
             adVORepository.save(adMapper.toPersistence(ad));
         } catch (Exception e) {
+            log.error("Error occurred while saving ad with id: {}", ad.getId(), e);
             throw new AdRepositoryAccessException("Error occurred while saving ad", e);
         }
     }
@@ -47,6 +51,7 @@ public class AdRepositoryImpl implements AdRepository {
                     .map(adMapper::toDomain)
                     .collect(Collectors.toList());
         } catch (Exception e) {
+            log.error("Error occurred while fetching relevant ads", e);
             throw new AdRepositoryAccessException("Error occurred while fetching relevant ads", e);
         }
     }
@@ -58,6 +63,7 @@ public class AdRepositoryImpl implements AdRepository {
                     .map(adMapper::toDomain)
                     .collect(Collectors.toList());
         } catch (Exception e) {
+            log.error("Error occurred while fetching irrelevant ads", e);
             throw new AdRepositoryAccessException("Error occurred while fetching irrelevant ads", e);
         }
     }

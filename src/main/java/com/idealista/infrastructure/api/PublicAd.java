@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PublicAd {
-
     private Integer id;
     private String typology;
     private String description;

@@ -13,12 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class PictureVO {
-
     @Id
     private Integer id;
     private String url;
     private String quality;
-
     @ManyToOne
     @JoinColumn(name = "ad_id", insertable = false, updatable = false)
     private AdVO ad;

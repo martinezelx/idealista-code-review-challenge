@@ -6,6 +6,7 @@ import com.idealista.infrastructure.api.PublicAd;
 import com.idealista.infrastructure.api.QualityAd;
 import com.idealista.infrastructure.mappers.AdToPublicAdMapper;
 import com.idealista.infrastructure.mappers.AdToQualityAdMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AdServiceImpl implements AdService {
 
@@ -29,27 +31,36 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public List<PublicAd> findPublicAds() {
-        return adRepository.findRelevantAds().stream()
+        log.info("Finding public ads");
+        List<PublicAd> publicAds = adRepository.findRelevantAds().stream()
                 .map(adToPublicAdMapper::adToPublicAd)
                 .collect(Collectors.toList());
+        log.info("Found {} public ads", publicAds.size());
+        return publicAds;
     }
 
     @Override
     public List<QualityAd> findQualityAds() {
-        return adRepository.findIrrelevantAds().stream()
+        log.info("Finding quality ads");
+        List<QualityAd> qualityAds = adRepository.findIrrelevantAds().stream()
                 .map(adToQualityAdMapper::adToQualityAd)
                 .collect(Collectors.toList());
+        log.info("Found {} quality ads", qualityAds.size());
+        return qualityAds;
     }
 
     @Override
     public void calculateScores() {
+        log.info("Calculating scores for all ads");
         adRepository
                 .findAllAds()
                 .forEach(this::calculateScore);
+        log.info("Finished calculating scores for all ads");
     }
 
     private void calculateScore(Ad ad) {
         try {
+            log.info("Calculating score for ad with id: {}", ad.getId());
             int score = calculatePicturesScore(ad.getPictures());
             score += calculateDescriptionScore(ad);
             score += calculateCompletenessScore(ad);
@@ -64,7 +75,9 @@ public class AdServiceImpl implements AdService {
             }
 
             adRepository.save(ad);
+            log.info("Successfully calculated and saved score for ad with id: {}", ad.getId());
         } catch (Exception e) {
+            log.error("Error calculating score for ad with id: {}", ad.getId(), e);
             throw new AdScoreCalculationException("Error calculating score for ad with id: " + ad.getId());
         }
     }
@@ -111,5 +124,4 @@ public class AdServiceImpl implements AdService {
     private int calculateCompletenessScore(Ad ad) {
         return ad.isComplete() ? Constants.FORTY : 0;
     }
-
 }
