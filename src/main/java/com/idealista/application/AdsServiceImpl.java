@@ -1,5 +1,6 @@
 package com.idealista.application;
 
+import com.idealista.application.exceptions.AdScoreCalculationException;
 import com.idealista.domain.*;
 import com.idealista.infrastructure.api.PublicAd;
 import com.idealista.infrastructure.api.QualityAd;
@@ -48,20 +49,24 @@ public class AdsServiceImpl implements AdsService {
     }
 
     private void calculateScore(Ad ad) {
-        int score = calculatePicturesScore(ad.getPictures());
-        score += calculateDescriptionScore(ad);
-        score += calculateCompletenessScore(ad);
+        try {
+            int score = calculatePicturesScore(ad.getPictures());
+            score += calculateDescriptionScore(ad);
+            score += calculateCompletenessScore(ad);
 
-        // The score is limited to 0 and 100
-        ad.setScore(Math.min(Math.max(score, Constants.ZERO), Constants.ONE_HUNDRED));
+            // The score is limited to 0 and 100
+            ad.setScore(Math.min(Math.max(score, Constants.ZERO), Constants.ONE_HUNDRED));
 
-        if (ad.getScore() < Constants.FORTY) {
-            ad.setIrrelevantSince(new Date());
-        } else {
-            ad.setIrrelevantSince(null);
+            if (ad.getScore() < Constants.FORTY) {
+                ad.setIrrelevantSince(new Date());
+            } else {
+                ad.setIrrelevantSince(null);
+            }
+
+            adRepository.save(ad);
+        } catch (Exception e) {
+            throw new AdScoreCalculationException("Error calculating score for ad with id: " + ad.getId());
         }
-
-        adRepository.save(ad);
     }
 
     private int calculatePicturesScore(List<Picture> pictures) {

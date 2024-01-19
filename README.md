@@ -188,3 +188,21 @@ La clase `AdsServiceImpl` ha sido refactorizada para mejorar su legibilidad y ma
 
 3. **Mejora de la Nomenclatura**: Se han renombrado algunas variables y métodos para mejorar la claridad y coherencia del código. Por ejemplo, el método `calculateScores` se ha renombrado a `calculateAdScores` para reflejar más claramente su propósito.
 
+## Incorporación de Global Exception Handler
+
+### Descripción:
+Se ha implementado un `GlobalExceptionHandler` en el proyecto. Este componente de Spring maneja las excepciones a nivel global, proporcionando respuestas uniformes y controladas en caso de errores.
+
+### Ventajas:
+- Mejora la consistencia y la legibilidad del manejo de errores.
+- Reduce la duplicación de código en el manejo de excepciones.
+- Proporciona un punto central para el manejo de errores y la generación de respuestas de error.
+
+### Descripción de las Excepciones:
+
+#### AdScoreCalculationException
+Esta excepción se lanza cuando ocurre un error durante el cálculo de la puntuación de un anuncio. Esto puede suceder, por ejemplo, si los datos necesarios para el cálculo son nulos o no están en el formato esperado.
+
+#### AdRepositoryAccessException
+Esta excepción se lanza cuando ocurre un error al acceder al repositorio de anuncios. Esto puede suceder, por ejemplo, si la base de datos está inaccesible o si ocurre un error durante la consulta.
+

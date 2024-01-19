@@ -1,5 +1,6 @@
 package com.idealista.infrastructure.persistence.repositories;
 
+import com.idealista.application.exceptions.AdRepositoryAccessException;
 import com.idealista.domain.Ad;
 import com.idealista.domain.AdRepository;
 import com.idealista.infrastructure.persistence.jpa.AdVORepository;
@@ -21,27 +22,43 @@ public class AdRepositoryImpl implements AdRepository {
 
     @Override
     public List<Ad> findAllAds() {
-        return adVORepository.findAll().stream()
-                .map(adMapper::toDomain)
-                .collect(Collectors.toList());
+        try {
+            return adVORepository.findAll().stream()
+                    .map(adMapper::toDomain)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new AdRepositoryAccessException("Error occurred while fetching all ads", e);
+        }
     }
 
     @Override
     public void save(Ad ad) {
-        adVORepository.save(adMapper.toPersistence(ad));
+        try {
+            adVORepository.save(adMapper.toPersistence(ad));
+        } catch (Exception e) {
+            throw new AdRepositoryAccessException("Error occurred while saving ad", e);
+        }
     }
 
     @Override
     public List<Ad> findRelevantAds() {
-        return adVORepository.findRelevantAds().stream()
-                .map(adMapper::toDomain)
-                .collect(Collectors.toList());
+        try {
+            return adVORepository.findRelevantAds().stream()
+                    .map(adMapper::toDomain)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new AdRepositoryAccessException("Error occurred while fetching relevant ads", e);
+        }
     }
 
     @Override
     public List<Ad> findIrrelevantAds() {
-        return adVORepository.findIrrelevantAds().stream()
-                .map(adMapper::toDomain)
-                .collect(Collectors.toList());
+        try {
+            return adVORepository.findIrrelevantAds().stream()
+                    .map(adMapper::toDomain)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new AdRepositoryAccessException("Error occurred while fetching irrelevant ads", e);
+        }
     }
 }
