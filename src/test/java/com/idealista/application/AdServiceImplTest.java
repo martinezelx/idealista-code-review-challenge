@@ -14,13 +14,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AdsServiceImplTest {
+class AdServiceImplTest {
 
     @Mock
     private AdRepository adRepository;
 
     @InjectMocks
-    private AdsServiceImpl scoreService;
+    private AdServiceImpl scoreService;
 
     @Test
     public void calculateScoresTest() {

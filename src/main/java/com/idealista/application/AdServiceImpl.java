@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class AdsServiceImpl implements AdsService {
+public class AdServiceImpl implements AdService {
 
     @Autowired
     private AdRepository adRepository;
@@ -104,7 +104,7 @@ public class AdsServiceImpl implements AdsService {
 
     private int calculateKeywordScore(List<String> words) {
         return (int) words.stream()
-                .filter(word -> Arrays.asList("luminoso", "nuevo", "céntrico", "reformado", "ático").contains(word))
+                .filter(Constants.KEYWORDS::contains)
                 .count() * Constants.FIVE;
     }
 

@@ -174,6 +174,8 @@ Se ha implementado GitHub Actions en el proyecto para automatizar flujos de trab
 
 # Actualizaciones de código
 ## Mejora y Refactorización de Código
+> [!NOTE]
+> Se han realizado varias mejoras y refactorizaciones en el código para intentar seguir los principios SOLID y las buenas prácticas de programación, en esta sección se explican los cambios más importantes.
 
 ### Refactorización de la Clase `AdsServiceImpl`
 

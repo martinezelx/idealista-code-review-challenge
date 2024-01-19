@@ -1,5 +1,8 @@
 package com.idealista.domain;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
     public static final int ZERO = 0;
     public static final int FIVE = 5;
@@ -10,4 +13,5 @@ public class Constants {
     public static final int FORTY_NINE = 49;
     public static final int FIFTY = 50;
     public static final int ONE_HUNDRED = 100;
+    public static final List<String> KEYWORDS = Arrays.asList("luminoso", "nuevo", "céntrico", "reformado", "ático");
 }

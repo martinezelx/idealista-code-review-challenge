@@ -5,7 +5,7 @@ import com.idealista.infrastructure.api.QualityAd;
 
 import java.util.List;
 
-public interface AdsService {
+public interface AdService {
 
     List<PublicAd> findPublicAds();
     List<QualityAd> findQualityAds();
