@@ -36,6 +36,9 @@ Para facilitar las cosas, cuando quieras referirte a alguna línea en concreto d
 Debes entregarnos un fichero de texto con todos los comentarios que harías sobre el código del repositorio.
 
 ---
+# Code Review
+* Aqui se explican los cambios realizados en el código para resolver los problemas planteados en el reto.
+---
 
 > [!TIP]
 > Se utiliza el README.md a modo de documentación para los cambios realizados.
@@ -43,54 +46,145 @@ Debes entregarnos un fichero de texto con todos los comentarios que harías sobr
 > [!NOTE]
 > Se ha eliminado la clase InMemoryPersistence y se ha implementado una base de datos local H2 con un carga inicial para que el entorno del proyecto funcione correctamente.
 
-# Solución
-* Aqui se explican los cambios realizados en el código para resolver los problemas planteados en el reto.
+# Actualizaciones de requisitos
 
-## Actualización del proyecto a Java 17
-### Problema
-El proyecto estaba utilizando una versión anterior de Java (1.8) y necesitaba actualizarlo a Java 17 para aprovechar las nuevas características, mejoras de rendimiento y seguridad de esta versión.
+## Cambio en el Cálculo de Completitud del Anuncio y Normalización de Puntuación
 
-### Solución
-Para resolver este problema, he realizado los siguientes cambios en el archivo `pom.xml`:
-1. Cambiamos la versión de Java en la sección de propiedades a 17.
-2. Actualizamos la versión de Spring Boot a una que sea compatible con Java 17. En este caso, utilizamos la versión 3.2.1.
+### Problema:
+Originalmente, la puntuación de un anuncio se establecía en 40 puntos si cumplía con los criterios de completitud, sin tener en cuenta otras puntuaciones acumuladas. Esto subestimaba la puntuación total de anuncios con atributos adicionales positivos. Además, no había una verificación explícita para asegurar que la puntuación total no excediera el límite máximo de 100 puntos.
 
-## Lombok
-### Problema
-El proyecto no estaba utilizando Lombok, por lo que el código contenía mucho boilerplate que dificultaba la lectura y mantenimiento del mismo.
+### Solución:
+Se realizó una doble modificación en el método de cálculo:
 
-### Solución
-Para resolver este problema, he agregado la dependencia de Lombok compatible y las anotaciones necesarias para su implementación.
+1. **Puntuación por Completitud**:
+  - En lugar de asignar directamente 40 puntos a los anuncios completos, se modificó el método para sumar 40 puntos a la puntuación acumulada. Este enfoque garantiza que los anuncios que son completos y tienen características adicionales de alta calidad reciban una puntuación que refleje adecuadamente su valor.
+  - Cambio en el código:
+    ```java
+    private int calculateCompletenessScore(Ad ad) {
+        return ad.isComplete() ? Constants.FORTY : 0;
+    }
+    ```
 
-## Fichero .gitignore
-### Problema
-El proyecto contenía un fichero `.gitignore` casi vacío, por lo que se podrían subir al repositorio archivos innecesarios.
+2. **Normalización de la Puntuación Total**:
+  - Se añadió una lógica para asegurar que la puntuación total de un anuncio no exceda el límite máximo de 100 puntos. Esto se realiza mediante la aplicación de las funciones `Math.max` y `Math.min` para mantener la puntuación dentro del rango de 0 a 100.
+  - Cambio en el código:
+    ```java
+    private void calculateScore(Ad ad) {
+        int score = calculatePicturesScore(ad.getPictures());
+        score += calculateDescriptionScore(ad);
+        score += calculateCompletenessScore(ad);
 
-### Solución
-Para resolver este problema, he agregado un fichero `.gitignore` con reglas default para proyectos Java.
+        ad.setScore(Math.min(Math.max(score, Constants.ZERO), Constants.ONE_HUNDRED));
+    }
+    ```
+> [!NOTE]
+> Con estos ajustes, el sistema ahora no solo calcula la puntuación de los anuncios de manera más justa y representativa, sino que también asegura que dicha puntuación se mantenga dentro de los límites establecidos, mejorando la precisión y la fiabilidad del sistema de clasificación de anuncios en términos de completitud y calidad general.
 
-## MapStruct
-### Problema
-El proyecto no estaba utilizando ningun Mapper, por lo que el código contenía muchos mapeos que generabam boilerplate, dificultando la lectura y mantenimiento del mismo.
+# Actualizaciones del Proyecto
 
-### Solución
-Para resolver este problema, he agregado la dependencia de MapStruct compatible con Java 17/Lombok y creado los mappers necesarios.
+## Actualización a Java 17
+### Descripción
+Se ha actualizado el proyecto de Java 1.8 a Java 17 para aprovechar las últimas características, mejoras de rendimiento y seguridad que ofrece esta versión.
 
-## OpenAPI
-### Problema
-El proyecto no estaba utilizando OpenAPI, por lo que no se podía generar la documentación de la API.
+### Ventajas
+- Acceso a nuevas características y APIs de Java.
+- Mejoras significativas en rendimiento y seguridad.
+- Mayor compatibilidad y soporte a largo plazo.
 
-### Solución
-Para resolver este problema, he agregado la dependencia de OpenAPI compatible con Spring Boot 3.2.1 y creado varias anotaciones para documentar la API y su visualización en Swagger.
+## Implementación de Lombok
+### Descripción
+Se ha integrado Lombok en el proyecto para reducir el código boilerplate, especialmente en la definición de modelos y constructores.
 
-## Spring Actuator
-### Problema
-El proyecto no estaba utilizando Spring Actuator, por lo que no se podía obtener información sobre el estado de la aplicación.
+### Ventajas
+- Reducción significativa del código repetitivo.
+- Mejora en la legibilidad y mantenimiento del código.
+- Generación automática de métodos comunes como getters, setters y toString.
 
-### Solución
-Para resolver este problema, he agregado la dependencia de Spring Actuator compatible, aparte de los endpoints por defecto tambien he agregado un @Timed para medir el tiempo de ejecución de los endpoints.
+## Mejora del Archivo .gitignore
+### Descripción
+Se ha actualizado el archivo `.gitignore` con reglas más completas para proyectos Java, asegurando que solo los archivos relevantes sean rastreados en el repositorio.
+
+### Ventajas
+- Evita la inclusión de archivos innecesarios en el control de versiones.
+- Mejora la limpieza y organización del repositorio.
+- Prevención de conflictos y problemas de merge relacionados con archivos no deseados.
+
+## Incorporación de la Base de Datos H2
+### Descripción
+Se ha integrado la base de datos en memoria H2 en el proyecto. Esto permite simular un entorno de base de datos real sin la necesidad de configurar un sistema de base de datos externo, facilitando las pruebas y el desarrollo.
+
+### Ventajas
+- La incorporación de H2 es una mejora significativa para el proyecto, ya que aporta flexibilidad y eficiencia en el desarrollo y las pruebas, manteniendo al mismo tiempo una experiencia cercana a la realidad de un entorno de producción.
+
 > [!TIP]
-> Se puede revisar el tiempo de ejecución en los siguientes endpoints: 
-> http://localhost:8080/actuator/metrics/ads.quality
-> http://localhost:8080/actuator/metrics/ads.public
-> http://localhost:8080/actuator/metrics/ads.score
+> Se puede acceder al dashboard de H2 en el siguiente endpoint:
+> - http://localhost:8080/h2-console
+> - JDBC URL: jdbc:h2:mem:testdb
+> - User Name: sa
+> - Password: root
+
+## Incorporación de MapStruct
+### Descripción
+Se ha añadido MapStruct al proyecto para manejar de forma eficiente los mapeos entre distintos objetos (DTOs y entidades), reduciendo el boilerplate en esta área.
+
+### Ventajas
+- Simplificación de los mapeos de objetos.
+- Mejora en la mantenibilidad y claridad del código.
+- Integración fácil con Lombok y Java 17.
+
+## Adopción de OpenAPI
+### Descripción
+Se ha integrado OpenAPI para generar automáticamente la documentación de la API, facilitando su visualización y uso a través de herramientas como Swagger.
+
+### Ventajas
+- Documentación automática y actualizada de la API.
+- Facilita la prueba y exploración de la API a través de interfaces de usuario como Swagger.
+- Mejora en la colaboración y comprensión de los endpoints de la API.
+
+> [!TIP]
+> Se puede acceder a Swagger en el siguiente endpoint:
+> - http://localhost:8080/swagger-ui/index.html
+
+## Uso de Spring Actuator
+### Descripción
+Se ha implementado Spring Actuator para proporcionar información detallada sobre el estado y rendimiento de la aplicación.
+
+### Ventajas
+- Monitoreo en tiempo real del estado de la aplicación.
+- Posibilidad de medir el tiempo de ejecución de endpoints específicos.
+- Herramienta esencial para el diagnóstico y el análisis de rendimiento.
+
+> [!TIP]
+> Los tiempos de ejecución pueden ser revisados en los siguientes endpoints:
+> - http://localhost:8080/actuator/metrics/ads.quality
+> - http://localhost:8080/actuator/metrics/ads.public
+> - http://localhost:8080/actuator/metrics/ads.score
+
+## Incorporación de GitHub Actions
+### Descripción
+Se ha implementado GitHub Actions en el proyecto para automatizar flujos de trabajo de integración continua (CI) y despliegue continuo (CD). Esto incluye la automatización de pruebas, compilación, y despliegue de la aplicación.
+
+### Ventajas
+- **Automatización de Pruebas y Compilación**: Cada vez que se realiza un push o pull request, GitHub Actions puede ejecutar automáticamente las pruebas y la compilación del proyecto, asegurando que todos los cambios cumplen con los estándares de calidad establecidos.
+- **Despliegue Continuo**: Facilita la implementación automática de la aplicación en un entorno de producción o de prueba tras cada confirmación en la rama principal, lo que agiliza significativamente el proceso de despliegue.
+- **Integración Sencilla con GitHub**: Al estar integrado directamente en GitHub, se simplifica la configuración y el mantenimiento de los flujos de trabajo de CI/CD.
+
+> [!NOTE]
+> Con estas actualizaciones, el proyecto no solo se mantiene al día con las últimas tecnologías y prácticas de desarrollo, sino que también mejora en términos de eficiencia, mantenimiento, y capacidad de monitoreo.
+
+# Actualizaciones de código
+## Mejora y Refactorización de Código
+
+### Refactorización de la Clase `AdsServiceImpl`
+
+#### Descripción:
+La clase `AdsServiceImpl` ha sido refactorizada para mejorar su legibilidad y mantenibilidad. Los cambios realizados incluyen la extracción de bloques de código a métodos privados, la simplificación de la lógica compleja y la mejora de la nomenclatura de las variables y métodos.
+
+#### Cambios Detallados:
+
+1. **Extracción de Métodos**: Se han extraído bloques de código a métodos privados para mejorar la legibilidad y reutilización del código. Por ejemplo, el cálculo de la puntuación de las imágenes y la descripción se ha movido a los métodos `calculatePicturesScore` y `calculateDescriptionScore` respectivamente.
+
+2. **Simplificación de la Lógica**: Se ha simplificado la lógica compleja para mejorar la legibilidad del código. Por ejemplo, la lógica para calcular la puntuación de las palabras clave se ha simplificado utilizando operaciones de stream y lambda.
+
+3. **Mejora de la Nomenclatura**: Se han renombrado algunas variables y métodos para mejorar la claridad y coherencia del código. Por ejemplo, el método `calculateScores` se ha renombrado a `calculateAdScores` para reflejar más claramente su propósito.
+

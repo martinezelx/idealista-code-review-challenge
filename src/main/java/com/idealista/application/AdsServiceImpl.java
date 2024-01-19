@@ -48,69 +48,12 @@ public class AdsServiceImpl implements AdsService {
     }
 
     private void calculateScore(Ad ad) {
-        int score = Constants.ZERO;
+        int score = calculatePicturesScore(ad.getPictures());
+        score += calculateDescriptionScore(ad);
+        score += calculateCompletenessScore(ad);
 
-        //Calcular puntuación por fotos
-        if (ad.getPictures().isEmpty()) {
-            score -= Constants.TEN; //Si no hay fotos restamos 10 puntos
-        } else {
-            for (Picture picture : ad.getPictures()) {
-                if (Quality.HD.equals(picture.getQuality())) {
-                    score += Constants.TWENTY; //Cada foto en alta definición aporta 20 puntos
-                } else {
-                    score += Constants.TEN; //Cada foto normal aporta 10 puntos
-                }
-            }
-        }
-
-        //Calcular puntuación por descripción
-        Optional<String> optDesc = Optional.ofNullable(ad.getDescription());
-
-        if (optDesc.isPresent()) {
-            String description = optDesc.get();
-
-            if (!description.isEmpty()) {
-                score += Constants.FIVE;
-            }
-
-            List<String> wds = Arrays.asList(description.split(" ")); //número de palabras
-            if (Typology.FLAT.equals(ad.getTypology())) {
-                if (wds.size() >= Constants.TWENTY && wds.size() <= Constants.FORTY_NINE) {
-                    score += Constants.TEN;
-                }
-
-                if (wds.size() >= Constants.FIFTY) {
-                    score += Constants.THIRTY;
-                }
-            }
-
-            if (Typology.CHALET.equals(ad.getTypology())) {
-                if (wds.size() >= Constants.FIFTY) {
-                    score += Constants.TWENTY;
-                }
-            }
-
-            if (wds.contains("luminoso")) score += Constants.FIVE;
-            if (wds.contains("nuevo")) score += Constants.FIVE;
-            if (wds.contains("céntrico")) score += Constants.FIVE;
-            if (wds.contains("reformado")) score += Constants.FIVE;
-            if (wds.contains("ático")) score += Constants.FIVE;
-        }
-
-        //Calcular puntuación por completitud
-        if (ad.isComplete()) {
-            score = Constants.FORTY;
-        }
-
-        ad.setScore(score);
-
-        if (ad.getScore() < Constants.ZERO) {
-            ad.setScore(Constants.ZERO);
-        }
-
-        if (ad.getScore() > Constants.ONE_HUNDRED) {
-            ad.setScore(Constants.ONE_HUNDRED);
-        }
+        // The score is limited to 0 and 100
+        ad.setScore(Math.min(Math.max(score, Constants.ZERO), Constants.ONE_HUNDRED));
 
         if (ad.getScore() < Constants.FORTY) {
             ad.setIrrelevantSince(new Date());
@@ -121,5 +64,47 @@ public class AdsServiceImpl implements AdsService {
         adRepository.save(ad);
     }
 
+    private int calculatePicturesScore(List<Picture> pictures) {
+        return pictures.stream()
+                .mapToInt(picture -> Quality.HD.equals(picture.getQuality()) ? Constants.TWENTY : Constants.TEN)
+                .sum() - (pictures.isEmpty() ? Constants.TEN : 0);
+    }
+
+    private int calculateDescriptionScore(Ad ad) {
+        return Optional.ofNullable(ad.getDescription())
+                .map(description -> {
+                    int score = description.isEmpty() ? 0 : Constants.FIVE;
+                    List<String> words = Arrays.asList(description.split(" "));
+                    score += calculateWordsScore(ad.getTypology(), words);
+                    score += calculateKeywordScore(words);
+                    return score;
+                })
+                .orElse(0);
+    }
+
+    private int calculateWordsScore(Typology typology, List<String> words) {
+        int score = 0;
+        int wordCount = words.size();
+        if (Typology.FLAT.equals(typology)) {
+            if (wordCount >= Constants.TWENTY && wordCount <= Constants.FORTY_NINE) {
+                score += Constants.TEN;
+            } else if (wordCount >= Constants.FIFTY) {
+                score += Constants.THIRTY;
+            }
+        } else if (Typology.CHALET.equals(typology) && wordCount >= Constants.FIFTY) {
+            score += Constants.TWENTY;
+        }
+        return score;
+    }
+
+    private int calculateKeywordScore(List<String> words) {
+        return (int) words.stream()
+                .filter(word -> Arrays.asList("luminoso", "nuevo", "céntrico", "reformado", "ático").contains(word))
+                .count() * Constants.FIVE;
+    }
+
+    private int calculateCompletenessScore(Ad ad) {
+        return ad.isComplete() ? Constants.FORTY : 0;
+    }
 
 }
