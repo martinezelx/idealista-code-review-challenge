@@ -8,13 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class PictureVO {
     @Id
-    private Integer id;
+    private UUID id;
     private String url;
     private String quality;
     @ManyToOne

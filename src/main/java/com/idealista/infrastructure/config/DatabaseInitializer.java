@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -20,30 +21,39 @@ public class DatabaseInitializer {
     public CommandLineRunner initDatabase(AdVORepository adVORepository, PictureVORepository pictureVORepository) {
         return args -> {
             List<PictureVO> pictures = pictureVORepository.saveAll(Arrays.asList(
-                    new PictureVO(1, "http://www.idealista.com/pictures/1", "SD", null),
-                    new PictureVO(2, "http://www.idealista.com/pictures/2", "HD", null),
-                    new PictureVO(3, "http://www.idealista.com/pictures/3", "SD", null),
-                    new PictureVO(4, "http://www.idealista.com/pictures/4", "HD", null),
-                    new PictureVO(5, "http://www.idealista.com/pictures/5", "SD", null),
-                    new PictureVO(6, "http://www.idealista.com/pictures/6", "SD", null),
-                    new PictureVO(7, "http://www.idealista.com/pictures/7", "SD", null),
-                    new PictureVO(8, "http://www.idealista.com/pictures/8", "HD", null)
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/1", "SD", null),
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/2", "HD", null),
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/3", "SD", null),
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/4", "HD", null),
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/5", "SD", null),
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/6", "SD", null),
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/7", "SD", null),
+                    new PictureVO(UUID.randomUUID(), "http://www.idealista.com/pictures/8", "HD", null)
             ));
 
+            UUID pic1Id = pictures.get(0).getId();
+            UUID pic2Id = pictures.get(1).getId();
+            UUID pic3Id = pictures.get(2).getId();
+            UUID pic4Id = pictures.get(3).getId();
+            UUID pic5Id = pictures.get(4).getId();
+            UUID pic6Id = pictures.get(5).getId();
+            UUID pic7Id = pictures.get(6).getId();
+            UUID pic8Id = pictures.get(7).getId();
+
             adVORepository.saveAll(Arrays.asList(
-                    new AdVO(1, "CHALET", "Este piso es una ganga, compra, compra, COMPRA!!!!!", findPictures(pictures, Collections.emptyList()), 300, null, null, null),
-                    new AdVO(2, "FLAT", "Nuevo ático céntrico recién reformado. No deje pasar la oportunidad y adquiera este ático de lujo", findPictures(pictures, List.of(4)), 300, null, null, null),
-                    new AdVO(3, "CHALET", "", findPictures(pictures, List.of(2)), 300, null, null, null),
-                    new AdVO(4, "FLAT", "Ático céntrico muy luminoso y recién reformado, parece nuevo", findPictures(pictures, List.of(5)), 300, null, null, null),
-                    new AdVO(5, "FLAT", "Pisazo,", findPictures(pictures, Arrays.asList(3, 8)), 300, null, null, null),
-                    new AdVO(6, "GARAGE", "", findPictures(pictures, List.of(6)), 300, null, null, null),
-                    new AdVO(7, "GARAGE", "Garaje en el centro de Albacete", findPictures(pictures, Collections.emptyList()), 300, null, null, null),
-                    new AdVO(8, "CHALET", "Maravilloso chalet situado en lAs afueras de un pequeño pueblo rural. El entorno es espectacular, las vistas magníficas. ¡Cómprelo ahora!", findPictures(pictures, Arrays.asList(1, 7)), 300, null, null, null)
+                    new AdVO(UUID.randomUUID(), "CHALET", "Este piso es una ganga, compra, compra, COMPRA!!!!!", findPictures(pictures, Collections.emptyList()), 300, null, null, null),
+                    new AdVO(UUID.randomUUID(), "FLAT", "Nuevo ático céntrico recién reformado. No deje pasar la oportunidad y adquiera este ático de lujo", findPictures(pictures, List.of(pic4Id)), 300, null, null, null),
+                    new AdVO(UUID.randomUUID(), "CHALET", "", findPictures(pictures, List.of(pic2Id)), 300, null, null, null),
+                    new AdVO(UUID.randomUUID(), "FLAT", "Ático céntrico muy luminoso y recién reformado, parece nuevo", findPictures(pictures, List.of(pic5Id)), 300, null, null, null),
+                    new AdVO(UUID.randomUUID(), "FLAT", "Pisazo,", findPictures(pictures, Arrays.asList(pic3Id, pic8Id)), 300, null, null, null),
+                    new AdVO(UUID.randomUUID(), "GARAGE", "", findPictures(pictures, List.of(pic6Id)), 300, null, null, null),
+                    new AdVO(UUID.randomUUID(), "GARAGE", "Garaje en el centro de Albacete", findPictures(pictures, Collections.emptyList()), 300, null, null, null),
+                    new AdVO(UUID.randomUUID(), "CHALET", "Maravilloso chalet situado en lAs afueras de un pequeño pueblo rural. El entorno es espectacular, las vistas magníficas. ¡Cómprelo ahora!", findPictures(pictures, Arrays.asList(pic1Id, pic7Id)), 300, null, null, null)
             ));
         };
     }
 
-    private List<PictureVO> findPictures(List<PictureVO> pictures, List<Integer> ids) {
+    private List<PictureVO> findPictures(List<PictureVO> pictures, List<UUID> ids) {
         return pictures.stream()
                 .filter(picture -> ids.contains(picture.getId()))
                 .collect(Collectors.toList());

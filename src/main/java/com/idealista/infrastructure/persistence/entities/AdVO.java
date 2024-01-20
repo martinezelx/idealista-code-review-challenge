@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 public class AdVO {
     @Id
-    private Integer id;
+    private UUID id;
     private String typology;
     private String description;
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

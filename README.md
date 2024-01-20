@@ -260,3 +260,32 @@ Se han realizado varias mejoras y cambios en la clase `AdController` para mejora
 
 > [!NOTE]
 > Con estos cambios, el controlador ahora proporciona una documentación de API más detallada, permite el seguimiento del tiempo de ejecución de los endpoints y sigue las convenciones REST de manera más precisa.
+
+## Cambio de Integer a UUID para los IDs de las Entidades
+
+### Descripción:
+Se ha realizado un cambio en las entidades `Ad` y `Picture`, donde los IDs, que antes eran de tipo `Integer`, ahora son de tipo `UUID`. Este cambio proporciona una mayor seguridad y reduce la posibilidad de colisiones, ya que los UUID son identificadores únicos a nivel mundial.
+
+### Ventajas:
+- **Seguridad Mejorada**: Los UUID son más seguros que los enteros para los IDs, ya que son prácticamente únicos. Esto reduce la posibilidad de colisiones de IDs.
+- **Escalabilidad**: Los UUID son especialmente útiles en sistemas distribuidos donde no se puede garantizar la unicidad de los IDs a través de diferentes nodos.
+- **Consistencia**: Los UUID son consistentes en tamaño (siempre 128 bits), lo que puede simplificar el diseño de la base de datos y la interfaz de programación.
+
+> [!NOTE]
+> Con este cambio, el sistema ahora utiliza UUID para los IDs de las entidades `Ad` y `Picture`, mejorando la seguridad y la escalabilidad del sistema.
+
+## Actualizaciones de Testing
+
+### Descripción:
+Se han realizado varias adiciones y modificaciones a las pruebas unitarias e integración del proyecto. Estos cambios buscan mejorar la cobertura de las pruebas, asegurando que todas las funcionalidades del sistema estén adecuadamente probadas.
+
+### Detalles:
+
+1. **Adición de Nuevas Pruebas**: Se han añadido nuevas pruebas para cubrir funcionalidades que anteriormente no estaban probadas. Estas nuevas pruebas ayudan a garantizar que todas las partes del sistema funcionen como se espera.
+
+2. **Modificación de Pruebas Existentes**: Se han modificado algunas pruebas existentes para reflejar los cambios realizados en el código del sistema. Estas modificaciones aseguran que las pruebas sigan siendo relevantes y útiles a pesar de los cambios en el código.
+
+3. **Mejora de la Cobertura de las Pruebas**: Con la adición de nuevas pruebas y la modificación de las existentes, se ha mejorado la cobertura de las pruebas del sistema. Esto significa que una mayor proporción del código del sistema está siendo probada, lo que aumenta la confianza en la corrección y robustez del sistema.
+
+> [!NOTE]
+> Con estas actualizaciones, el sistema ahora tiene una cobertura de pruebas más completa y precisa, lo que mejora la calidad y la fiabilidad del código.

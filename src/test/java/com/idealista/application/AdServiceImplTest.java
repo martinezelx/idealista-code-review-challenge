@@ -1,6 +1,12 @@
 package com.idealista.application;
 
-import com.idealista.domain.*;
+import com.idealista.domain.Ad;
+import com.idealista.domain.AdRepository;
+import com.idealista.infrastructure.api.PublicAd;
+import com.idealista.infrastructure.api.QualityAd;
+import com.idealista.infrastructure.mappers.AdToPublicAdMapper;
+import com.idealista.infrastructure.mappers.AdToQualityAdMapper;
+import com.idealista.utils.TestBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,9 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+
 
 @ExtendWith(MockitoExtension.class)
 class AdServiceImplTest {
@@ -19,39 +27,48 @@ class AdServiceImplTest {
     @Mock
     private AdRepository adRepository;
 
+    @Mock
+    private AdToPublicAdMapper adToPublicAdMapper;
+
+    @Mock
+    private AdToQualityAdMapper adToQualityAdMapper;
+
     @InjectMocks
-    private AdServiceImpl scoreService;
+    private AdServiceImpl adService;
+
+    @Test
+    public void findPublicAdsTest() {
+        PublicAd publicAd = TestBuilder.buildPublicAd();
+        Ad ad = TestBuilder.buildAd();
+        when(adRepository.findRelevantAds()).thenReturn(Collections.singletonList(ad));
+        when(adToPublicAdMapper.adToPublicAd(ad)).thenReturn(publicAd);
+
+        List<PublicAd> result = adService.findPublicAds();
+
+        assertEquals(1, result.size());
+        assertEquals(publicAd, result.get(0));
+        verify(adRepository).findRelevantAds();
+    }
+
+    @Test
+    public void findQualityAdsTest() {
+        QualityAd qualityAd = TestBuilder.buildQualityAd();
+        Ad ad = TestBuilder.buildAd();
+        when(adRepository.findIrrelevantAds()).thenReturn(Collections.singletonList(ad));
+        when(adToQualityAdMapper.adToQualityAd(ad)).thenReturn(qualityAd);
+
+        List<QualityAd> result = adService.findQualityAds();
+
+        assertEquals(1, result.size());
+        assertEquals(qualityAd, result.get(0));
+        verify(adRepository).findIrrelevantAds();
+    }
 
     @Test
     public void calculateScoresTest() {
-        when(adRepository.findAllAds()).thenReturn(Arrays.asList(irrelevantAd(), relevantAd()));
-        scoreService.calculateScores();
+        when(adRepository.findAllAds()).thenReturn(Arrays.asList(TestBuilder.buildAd(), TestBuilder.buildAd()));
+        adService.calculateScores();
         verify(adRepository).findAllAds();
         verify(adRepository, times(2)).save(any());
     }
-
-    private Ad relevantAd() {
-        return Ad.builder()
-                .id(1)
-                .typology(Typology.FLAT)
-                .description("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum felis elit, vitae cursus erat blandit vitae. Maecenas eget efficitur massa. Maecenas ut dolor eget enim consequat iaculis vitae nec elit. Maecenas eu urna nec massa feugiat pharetra. Sed eu quam imperdiet orci lobortis fermentum. Sed odio justo, congue eget iaculis.")
-                .pictures(Arrays.asList(
-                        Picture.builder().id(1).url("http://urldeprueba.com/1").quality(Quality.HD).build(),
-                        Picture.builder().id(2).url("http://urldeprueba.com/2").quality(Quality.HD).build()))
-                .houseSize(50)
-                .gardenSize(null)
-                .build();
-    }
-
-    private Ad irrelevantAd() {
-        return Ad.builder()
-                .id(1)
-                .typology(Typology.FLAT)
-                .description("")
-                .pictures(Collections.emptyList())
-                .houseSize(100)
-                .gardenSize(null)
-                .build();
-    }
-
 }
