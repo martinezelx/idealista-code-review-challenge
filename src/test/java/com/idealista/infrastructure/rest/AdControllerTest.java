@@ -1,6 +1,8 @@
-package com.idealista.infrastructure.api;
+package com.idealista.infrastructure.rest;
 
 import com.idealista.application.AdService;
+import com.idealista.infrastructure.rest.dto.PublicAdDTO;
+import com.idealista.infrastructure.rest.dto.QualityAdDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,8 +32,8 @@ public class AdControllerTest {
 
     @Test
     public void qualityListingTest() throws Exception {
-        QualityAd qualityAd = new QualityAd();
-        when(adService.findQualityAds()).thenReturn(Collections.singletonList(qualityAd));
+        QualityAdDTO qualityAdDTO = new QualityAdDTO();
+        when(adService.findQualityAds()).thenReturn(Collections.singletonList(qualityAdDTO));
 
         mockMvc = MockMvcBuilders.standaloneSetup(adController).build();
         mockMvc.perform(get("/ads/quality")
@@ -41,8 +43,8 @@ public class AdControllerTest {
 
     @Test
     public void publicListingTest() throws Exception {
-        PublicAd publicAd = new PublicAd();
-        when(adService.findPublicAds()).thenReturn(Collections.singletonList(publicAd));
+        PublicAdDTO publicAdDTO = new PublicAdDTO();
+        when(adService.findPublicAds()).thenReturn(Collections.singletonList(publicAdDTO));
 
         mockMvc = MockMvcBuilders.standaloneSetup(adController).build();
         mockMvc.perform(get("/ads/public")

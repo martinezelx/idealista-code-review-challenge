@@ -5,10 +5,10 @@ import com.idealista.domain.Ad;
 import com.idealista.domain.AdRepository;
 import com.idealista.domain.Constants;
 import com.idealista.domain.Picture;
-import com.idealista.infrastructure.api.PublicAd;
-import com.idealista.infrastructure.api.QualityAd;
-import com.idealista.infrastructure.mappers.AdToPublicAdMapper;
-import com.idealista.infrastructure.mappers.AdToQualityAdMapper;
+import com.idealista.infrastructure.rest.dto.PublicAdDTO;
+import com.idealista.infrastructure.rest.dto.QualityAdDTO;
+import com.idealista.infrastructure.rest.mappers.AdToPublicAdDTOMapper;
+import com.idealista.infrastructure.rest.mappers.AdToQualityAdDTOMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,29 +27,29 @@ public class AdServiceImpl implements AdService {
     private AdRepository adRepository;
 
     @Autowired
-    private AdToPublicAdMapper adToPublicAdMapper;
+    private AdToPublicAdDTOMapper adToPublicAdDTOMapper;
 
     @Autowired
-    private AdToQualityAdMapper adToQualityAdMapper;
+    private AdToQualityAdDTOMapper adToQualityAdDTOMapper;
 
     @Override
-    public List<PublicAd> findPublicAds() {
+    public List<PublicAdDTO> findPublicAds() {
         log.info("Finding public ads");
-        List<PublicAd> publicAds = adRepository.findRelevantAds().stream()
-                .map(adToPublicAdMapper::adToPublicAd)
+        List<PublicAdDTO> publicAdDTOS = adRepository.findRelevantAds().stream()
+                .map(adToPublicAdDTOMapper::adToPublicAd)
                 .collect(Collectors.toList());
-        log.info("Found {} public ads", publicAds.size());
-        return publicAds;
+        log.info("Found {} public ads", publicAdDTOS.size());
+        return publicAdDTOS;
     }
 
     @Override
-    public List<QualityAd> findQualityAds() {
+    public List<QualityAdDTO> findQualityAds() {
         log.info("Finding quality ads");
-        List<QualityAd> qualityAds = adRepository.findIrrelevantAds().stream()
-                .map(adToQualityAdMapper::adToQualityAd)
+        List<QualityAdDTO> qualityAdDTOS = adRepository.findIrrelevantAds().stream()
+                .map(adToQualityAdDTOMapper::adToQualityAd)
                 .collect(Collectors.toList());
-        log.info("Found {} quality ads", qualityAds.size());
-        return qualityAds;
+        log.info("Found {} quality ads", qualityAdDTOS.size());
+        return qualityAdDTOS;
     }
 
     @Override

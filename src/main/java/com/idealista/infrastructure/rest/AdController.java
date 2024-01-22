@@ -1,6 +1,8 @@
-package com.idealista.infrastructure.api;
+package com.idealista.infrastructure.rest;
 
 import com.idealista.application.AdService;
+import com.idealista.infrastructure.rest.dto.PublicAdDTO;
+import com.idealista.infrastructure.rest.dto.QualityAdDTO;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,7 +30,7 @@ public class AdController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @Timed(value = "ads.quality", description = "Time taken to retrieve the list of quality ads")
-    public ResponseEntity<List<QualityAd>> qualityListing() {
+    public ResponseEntity<List<QualityAdDTO>> qualityListing() {
         return ResponseEntity.ok(adService.findQualityAds());
     }
 
@@ -39,7 +41,7 @@ public class AdController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @Timed(value = "ads.public", description = "Time taken to retrieve the list of public ads")
-    public ResponseEntity<List<PublicAd>> publicListing() {
+    public ResponseEntity<List<PublicAdDTO>> publicListing() {
         return ResponseEntity.ok(adService.findPublicAds());
     }
 

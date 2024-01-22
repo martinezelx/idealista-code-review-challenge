@@ -2,8 +2,8 @@ package com.idealista.utils;
 
 import com.idealista.domain.Ad;
 import com.idealista.domain.Picture;
-import com.idealista.infrastructure.api.PublicAd;
-import com.idealista.infrastructure.api.QualityAd;
+import com.idealista.infrastructure.rest.dto.PublicAdDTO;
+import com.idealista.infrastructure.rest.dto.QualityAdDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -24,28 +24,28 @@ public class TestBuilder {
         return ad;
     }
 
-    public static PublicAd buildPublicAd() {
-        PublicAd publicAd = new PublicAd();
-        publicAd.setId(UUID.randomUUID());
-        publicAd.setTypology("FLAT");
-        publicAd.setDescription("This is a test ad");
-        publicAd.setPictureUrls(List.of("http://example.com/picture1.jpg"));
-        publicAd.setHouseSize(100);
-        publicAd.setGardenSize(50);
-        return publicAd;
+    public static PublicAdDTO buildPublicAd() {
+        PublicAdDTO publicAdDTO = new PublicAdDTO();
+        publicAdDTO.setId(UUID.randomUUID());
+        publicAdDTO.setTypology("FLAT");
+        publicAdDTO.setDescription("This is a test ad");
+        publicAdDTO.setPictureUrls(List.of("http://example.com/picture1.jpg"));
+        publicAdDTO.setHouseSize(100);
+        publicAdDTO.setGardenSize(50);
+        return publicAdDTO;
     }
 
-    public static QualityAd buildQualityAd() {
-        QualityAd qualityAd = new QualityAd();
-        qualityAd.setId(UUID.randomUUID());
-        qualityAd.setTypology("FLAT");
-        qualityAd.setDescription("This is a test ad");
-        qualityAd.setPictureUrls(List.of("http://example.com/picture1.jpg"));
-        qualityAd.setHouseSize(100);
-        qualityAd.setGardenSize(50);
-        qualityAd.setScore(50);
-        qualityAd.setIrrelevantSince(new Date());
-        return qualityAd;
+    public static QualityAdDTO buildQualityAd() {
+        QualityAdDTO qualityAdDTO = new QualityAdDTO();
+        qualityAdDTO.setId(UUID.randomUUID());
+        qualityAdDTO.setTypology("FLAT");
+        qualityAdDTO.setDescription("This is a test ad");
+        qualityAdDTO.setPictureUrls(List.of("http://example.com/picture1.jpg"));
+        qualityAdDTO.setHouseSize(100);
+        qualityAdDTO.setGardenSize(50);
+        qualityAdDTO.setScore(50);
+        qualityAdDTO.setIrrelevantSince(new Date());
+        return qualityAdDTO;
     }
 
     public static Ad buildFlatAd() {

@@ -233,8 +233,8 @@ public class AdServiceImpl implements AdService {
     public List<PublicAd> findPublicAds() {
         log.info("Finding public ads");
         // ...
-        log.info("Found {} public ads", publicAds.size());
-        return publicAds;
+        log.info("Found {} public ads", publicAdDTOS.size());
+        return publicAdDTOS;
     }
 
     // ...

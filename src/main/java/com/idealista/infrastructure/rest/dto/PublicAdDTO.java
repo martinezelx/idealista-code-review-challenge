@@ -1,4 +1,4 @@
-package com.idealista.infrastructure.api;
+package com.idealista.infrastructure.rest.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Details about the public ad")
-public class PublicAd {
+public class PublicAdDTO {
     @Schema(description = "Unique identifier of the ad", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
     private UUID id;
 

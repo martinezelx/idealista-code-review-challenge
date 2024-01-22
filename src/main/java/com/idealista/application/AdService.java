@@ -1,13 +1,13 @@
 package com.idealista.application;
 
-import com.idealista.infrastructure.api.PublicAd;
-import com.idealista.infrastructure.api.QualityAd;
+import com.idealista.infrastructure.rest.dto.PublicAdDTO;
+import com.idealista.infrastructure.rest.dto.QualityAdDTO;
 
 import java.util.List;
 
 public interface AdService {
 
-    List<PublicAd> findPublicAds();
-    List<QualityAd> findQualityAds();
+    List<PublicAdDTO> findPublicAds();
+    List<QualityAdDTO> findQualityAds();
     void calculateScores();
 }
