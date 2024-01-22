@@ -173,6 +173,23 @@ Se ha implementado GitHub Actions en el proyecto para automatizar flujos de trab
 > Con estas actualizaciones, el proyecto no solo se mantiene al día con las últimas tecnologías y prácticas de desarrollo, sino que también mejora en términos de eficiencia, mantenimiento, y capacidad de monitoreo.
 
 # Actualizaciones de código
+
+## Arquitectura Hexagonal
+
+### Descripción:
+La arquitectura hexagonal mostrada en el proyecto parece estar correctamente implementada según los principios de este estilo arquitectónico. Cada paquete y clase parece tener un propósito bien definido y se adhiere a la separación de preocupaciones.
+
+- **application**: Este paquete suele contener los casos de uso de la aplicación y orquesta el flujo de datos a través del sistema. Aquí vemos un paquete de exceptions para el manejo de excepciones, y la interfaz AdService con su implementación AdServiceImpl, que contiene la lógica de negocio.
+
+- **domain**: Este paquete contiene la lógica de negocio central de la aplicación. En él, tenemos la entidad Ad y la interfaz AdRepository, que define el comportamiento esperado para la capa de persistencia sin especificar los detalles. También hay una clase Constants, que contiene constantes utilizadas en toda la aplicación.
+
+- **infrastructure**: Incluye clases que se conectan con preocupaciones externas como bases de datos, la web, etc. Config contiene las clases relacionadas con la configuración como DatabaseInitializer, GlobalExceptionHandler y SpringConfig. El subpaquete persistence contiene una implementación de las interfaces de repositorio, con AdVO y PictureVO siendo las entidades JPA y AdRepositoryImpl siendo la implementación concreta del repositorio.
+
+- **rest**: Aquí es donde se encuentran los adaptadores para los puertos entrantes. Traduce las solicitudes del mundo exterior en llamadas a la capa de aplicación. Incluye dto para los Objetos de Transferencia de Datos y mappers para convertir entre objetos de dominio y DTOs. AdController es el punto de entrada para las API REST y AdRankingApplication es la clase principal de la aplicación.
+
+> [!NOTE]
+> En general, la arquitectura hexagonal parece estar bien implementada en el proyecto, con cada paquete y clase teniendo un propósito bien definido y siguiendo la separación de preocupaciones.
+
 ## Mejora y Refactorización de Código
 > [!NOTE]
 > Se han realizado varias mejoras y refactorizaciones en el código para intentar seguir los principios SOLID y las buenas prácticas de programación, en esta sección se explican los cambios más importantes.
@@ -393,3 +410,4 @@ public class AdServiceImpl implements AdService {
 
     // ...
 }
+```
