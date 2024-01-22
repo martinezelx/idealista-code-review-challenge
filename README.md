@@ -289,3 +289,107 @@ Se han realizado varias adiciones y modificaciones a las pruebas unitarias e int
 
 > [!NOTE]
 > Con estas actualizaciones, el sistema ahora tiene una cobertura de pruebas más completa y precisa, lo que mejora la calidad y la fiabilidad del código.
+
+## Cambio en la Estructura de Paquetes y nombres de Clases
+
+### Descripción:
+Se han realizado varios cambios en la estructura de paquetes y nombres de clases para mejorar la legibilidad y la coherencia del código. Estos cambios incluyen la reorganización de los paquetes y la modificación de los nombres de las clases.
+
+> [!NOTE]
+> Algunos nombres de clases o estructuras de paquetes se han dejado sin modificar por desconocimiento de su contexto y propósito.
+
+# Mejoras Adicionales no implementadas
+
+## Seguridad de la API
+
+La seguridad de la API es una preocupación importante en el desarrollo de aplicaciones web. En este proyecto, se menciona que el endpoint `/ads/quality` debe ser accesible solo para los encargados de calidad. Para lograr esto, se puede utilizar Spring Security, un marco de seguridad poderoso y altamente personalizable para aplicaciones Spring.
+
+### Implementación de Spring Security
+
+La implementación de Spring Security en este proyecto implicaría los siguientes pasos:
+
+1. Añadir la dependencia de Spring Security al archivo `pom.xml`.
+
+2. Crear una clase de configuración de seguridad que extienda `WebSecurityConfigurerAdapter`. En esta clase, se puede configurar qué endpoints requieren autenticación y cuáles no.
+
+3. En la clase de configuración de seguridad, también se puede configurar un `AuthenticationProvider` o `UserDetailsService` para validar las credenciales de los usuarios.
+
+4. Finalmente, se puede configurar un `AccessDecisionManager` o `AccessDecisionVoter` para implementar la lógica de autorización basada en roles. Por ejemplo, se puede restringir el acceso al endpoint `/ads/quality` solo a los usuarios con el rol de "Encargado de Calidad".
+
+### Ejemplo de Configuración de Seguridad
+
+A continuación se muestra un ejemplo básico de cómo podría ser la clase de configuración de seguridad:
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+            .antMatchers("/ads/quality").hasRole("QUALITY_MANAGER")
+            .antMatchers("/ads/public", "/ads/score").permitAll()
+            .and()
+            .httpBasic()
+            .and()
+            .csrf().disable();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+```
+
+## Implementación de API First
+
+La implementación de API First implica diseñar la API de la aplicación antes de escribir cualquier código. Esto se hace generalmente a través de un archivo de especificación OpenAPI (anteriormente conocido como Swagger), que describe en detalle cada endpoint de la API, incluyendo las rutas, parámetros, respuestas y modelos.
+
+La ventaja de este enfoque es que permite a los desarrolladores y a los stakeholders acordar cómo será la API antes de que se escriba cualquier código. Esto puede ayudar a identificar problemas potenciales en una etapa temprana y facilita la creación de documentación y clientes de la API.
+
+En este proyecto, la implementación de API First implicaría los siguientes pasos:
+
+1. Crear un archivo `openapi.yml` en la raíz del proyecto.
+2. Escribir la especificación de la API en este archivo, describiendo cada endpoint en detalle.
+3. Utilizar una herramienta como Swagger UI para visualizar y probar la API.
+4. Generar el código del servidor a partir de la especificación de la API utilizando una herramienta como Swagger Codegen.
+
+> [!NOTE]
+> Actualmente el proyecto usa las anoaciones de OpenAPI para generar la documentación de la API, pero no se ha implementado una especificación de API First.
+
+## Inyección de Dependencias a través de Constructores
+
+En Spring, la anotación `@Autowired` se utiliza comúnmente para la inyección de dependencias. Sin embargo, esta práctica puede llevar a problemas, como la dificultad para realizar pruebas unitarias y la posibilidad de NullPointerExceptions en tiempo de ejecución.
+
+Una alternativa más segura y recomendada es la inyección de dependencias a través de constructores. Esto significa que las dependencias se proporcionan como argumentos del constructor de la clase. Esto tiene varias ventajas:
+
+- **Facilita las Pruebas Unitarias**: Al inyectar las dependencias a través del constructor, puedes proporcionar fácilmente mockups de las dependencias cuando estás realizando pruebas unitarias.
+- **Prevención de NullPointerExceptions**: Como las dependencias se inyectan cuando se crea la instancia de la clase, te aseguras de que las dependencias nunca sean nulas.
+- **Inmutabilidad**: Las dependencias se pueden marcar como `final` para garantizar que no se cambien después de la creación del objeto.
+
+Para implementar la inyección de dependencias a través de constructores en Spring, simplemente se necesitaría definir un constructor que tome todas las dependencias necesarias como argumentos y anotarlo con `@Autowired`. Sin embargo, a partir de Spring 4.3, si la clase solo tiene un constructor, la anotación `@Autowired` es opcional.
+
+Aquí tienes un ejemplo de cómo se vería:
+
+```java
+@Service
+public class AdServiceImpl implements AdService {
+
+    private final AdRepository adRepository;
+
+    public AdServiceImpl(AdRepository adRepository) {
+        this.adRepository = adRepository;
+    }
+
+    // ...
+}
