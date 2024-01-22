@@ -1,7 +1,10 @@
 package com.idealista.application;
 
 import com.idealista.application.exceptions.AdScoreCalculationException;
-import com.idealista.domain.*;
+import com.idealista.domain.Ad;
+import com.idealista.domain.AdRepository;
+import com.idealista.domain.Constants;
+import com.idealista.domain.Picture;
 import com.idealista.infrastructure.api.PublicAd;
 import com.idealista.infrastructure.api.QualityAd;
 import com.idealista.infrastructure.mappers.AdToPublicAdMapper;
@@ -84,7 +87,7 @@ public class AdServiceImpl implements AdService {
 
     private int calculatePicturesScore(List<Picture> pictures) {
         return pictures.stream()
-                .mapToInt(picture -> Quality.HD.equals(picture.getQuality()) ? Constants.TWENTY : Constants.TEN)
+                .mapToInt(picture -> Picture.Quality.HD.equals(picture.getQuality()) ? Constants.TWENTY : Constants.TEN)
                 .sum() - (pictures.isEmpty() ? Constants.TEN : 0);
     }
 
@@ -100,16 +103,16 @@ public class AdServiceImpl implements AdService {
                 .orElse(0);
     }
 
-    private int calculateWordsScore(Typology typology, List<String> words) {
+    private int calculateWordsScore(Ad.Typology typology, List<String> words) {
         int score = 0;
         int wordCount = words.size();
-        if (Typology.FLAT.equals(typology)) {
+        if (Ad.Typology.FLAT.equals(typology)) {
             if (wordCount >= Constants.TWENTY && wordCount <= Constants.FORTY_NINE) {
                 score += Constants.TEN;
             } else if (wordCount >= Constants.FIFTY) {
                 score += Constants.THIRTY;
             }
-        } else if (Typology.CHALET.equals(typology) && wordCount >= Constants.FIFTY) {
+        } else if (Ad.Typology.CHALET.equals(typology) && wordCount >= Constants.FIFTY) {
             score += Constants.TWENTY;
         }
         return score;

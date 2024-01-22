@@ -15,6 +15,12 @@ import java.util.UUID;
 @Builder
 public class Ad {
 
+    public enum Typology {
+        FLAT,
+        CHALET,
+        GARAGE,
+    }
+
     private UUID id;
     private Typology typology;
     private String description;

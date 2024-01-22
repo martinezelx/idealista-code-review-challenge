@@ -2,8 +2,6 @@ package com.idealista.utils;
 
 import com.idealista.domain.Ad;
 import com.idealista.domain.Picture;
-import com.idealista.domain.Quality;
-import com.idealista.domain.Typology;
 import com.idealista.infrastructure.api.PublicAd;
 import com.idealista.infrastructure.api.QualityAd;
 
@@ -16,7 +14,7 @@ public class TestBuilder {
     public static Ad buildAd() {
         Ad ad = new Ad();
         ad.setId(UUID.randomUUID());
-        ad.setTypology(Typology.FLAT);
+        ad.setTypology(Ad.Typology.FLAT);
         ad.setDescription("This is a test ad");
         ad.setPictures(List.of(buildPicture()));
         ad.setHouseSize(100);
@@ -53,7 +51,7 @@ public class TestBuilder {
     public static Ad buildFlatAd() {
         Ad ad = new Ad();
         ad.setId(UUID.randomUUID());
-        ad.setTypology(Typology.FLAT);
+        ad.setTypology(Ad.Typology.FLAT);
         ad.setDescription("This is a test flat ad");
         ad.setPictures(List.of(buildPicture()));
         ad.setHouseSize(100);
@@ -66,7 +64,7 @@ public class TestBuilder {
     public static Ad buildChaletAd() {
         Ad ad = new Ad();
         ad.setId(UUID.randomUUID());
-        ad.setTypology(Typology.CHALET);
+        ad.setTypology(Ad.Typology.CHALET);
         ad.setDescription("This is a test chalet ad");
         ad.setPictures(List.of(buildPicture()));
         ad.setHouseSize(200);
@@ -79,7 +77,7 @@ public class TestBuilder {
     public static Ad buildGarageAd() {
         Ad ad = new Ad();
         ad.setId(UUID.randomUUID());
-        ad.setTypology(Typology.GARAGE);
+        ad.setTypology(Ad.Typology.GARAGE);
         ad.setDescription("This is a test garage ad");
         ad.setPictures(List.of(buildPicture()));
         ad.setHouseSize(50);
@@ -93,7 +91,7 @@ public class TestBuilder {
         Picture picture = new Picture();
         picture.setId(UUID.randomUUID());
         picture.setUrl("http://example.com/picture1.jpg");
-        picture.setQuality(Quality.HD);
+        picture.setQuality(Picture.Quality.HD);
         return picture;
     }
 }

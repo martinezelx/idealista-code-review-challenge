@@ -12,6 +12,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class Picture {
+
+    public enum Quality {
+        HD,
+        SD,
+    }
+
     private UUID id;
     private String url;
     private Quality quality;
