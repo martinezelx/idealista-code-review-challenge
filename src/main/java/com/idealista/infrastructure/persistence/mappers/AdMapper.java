@@ -1,4 +1,4 @@
-package com.idealista.infrastructure.mappers;
+package com.idealista.infrastructure.persistence.mappers;
 
 import com.idealista.domain.Ad;
 import com.idealista.domain.Picture;

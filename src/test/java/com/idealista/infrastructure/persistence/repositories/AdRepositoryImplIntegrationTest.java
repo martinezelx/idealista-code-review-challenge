@@ -1,9 +1,8 @@
 package com.idealista.infrastructure.persistence.repositories;
 
 import com.idealista.domain.Ad;
-import com.idealista.infrastructure.mappers.AdMapper;
+import com.idealista.infrastructure.persistence.mappers.AdMapper;
 import com.idealista.infrastructure.persistence.entities.AdVO;
-import com.idealista.infrastructure.persistence.jpa.AdVORepository;
 import com.idealista.utils.TestBuilder;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;

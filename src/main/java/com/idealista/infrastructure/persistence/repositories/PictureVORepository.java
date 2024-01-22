@@ -1,4 +1,4 @@
-package com.idealista.infrastructure.persistence.jpa;
+package com.idealista.infrastructure.persistence.repositories;
 
 import com.idealista.infrastructure.persistence.entities.PictureVO;
 import org.springframework.data.jpa.repository.JpaRepository;
